@@ -1,0 +1,20 @@
+{
+  "test": {
+  "prefix": "begin",
+  "body": [
+    "begin",
+    "\t$0",
+    "end;"
+  ],
+  "description": "Begin end"
+  },
+  "case end": {
+  "prefix": "case",
+  "body": [
+    "case $1 of",
+    "\t$0",
+    "end;"
+  ],
+  "description": "case end"
+  }
+}

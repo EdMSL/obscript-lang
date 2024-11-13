@@ -2,38 +2,65 @@
     "name": "tes4scriptsyntax",
     "displayName": "The Elder Scrolls IV: Oblivion Script Syntax",
     "description": "Oblivion (TES4) scripting language support for VS Code",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "engines": {
         "vscode": "^1.55.0"
     },
     "categories": [
-        "Programming Languages"
+        "Programming Languages",
+        "Snippets"
     ],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/temetra/tes4_vscode_syntax.git"
-	},
-	"keywords": [
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/temetra/tes4_vscode_syntax.git"
+    },
+    "keywords": [
         "syntax",
         "highlight",
-		"tes4",
-		"oblivion"
-	],
-	"author": "Temetra <temetra.xy+git@gmail.com>",
+        "tes4",
+        "oblivion"
+    ],
+    "author": "Temetra <temetra.xy+git@gmail.com>",
     "publisher": "Temetra",
-	"license": "MIT",
-	"icon": "images/logo.png",
+    "license": "MIT",
+    "icon": "images/logo.png",
+    "activationEvents": [
+		"*"
+	],
+    "main": "./out/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint",
+		"watch": "tsc -watch -p ./"
+	},
     "contributes": {
-        "languages": [{
-            "id": "obscript",
-            "aliases": ["Oblivion Script", "TES4 Script", "obscript"],
-            "extensions": [".obscript"],
-            "configuration": "./language-configuration.json"
-        }],
-        "grammars": [{
-            "language": "obscript",
-            "scopeName": "source.obscript",
-            "path": "./syntaxes/obscript.tmLanguage.json"
-        }]
+        "languages": [
+            {
+                "id": "obscript",
+                "aliases": [
+                    "Oblivion Script",
+                    "TES4 Script",
+                    "obscript"
+                ],
+                "extensions": [
+                    ".obscript"
+                ],
+                "configuration": "./language-configuration.json"
+            }
+        ],
+        "grammars": [
+            {
+                "language": "obscript",
+                "scopeName": "source.obscript",
+                "path": "./syntaxes/obscript.tmLanguage.json"
+            }
+        ],
+        "snippets": [
+            {
+                "language": "obscript",
+                "path": "./snippets/obscript.json"
+            }
+        ]
     }
 }
