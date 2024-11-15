@@ -1,66 +1,75 @@
 {
-    "name": "tes4scriptsyntax",
-    "displayName": "The Elder Scrolls IV: Oblivion Script Syntax",
-    "description": "Oblivion (TES4) scripting language support for VS Code",
-    "version": "1.0.2",
-    "engines": {
-        "vscode": "^1.55.0"
-    },
-    "categories": [
-        "Programming Languages",
-        "Snippets"
+  "name": "obscript-lang-vscode",
+  "displayName": "Obscript Language Tools",
+  "description": "TES4: Oblivion scripting language support for VS Code",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.55.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/EdMSL/obscript-lang.git"
+  },
+  "keywords": [
+    "syntax",
+    "highlight",
+    "tes4",
+    "oblivion",
+    "obscript",
+    "script"
+  ],
+  "author": "Eduard Trait <eduard2011rus@gmail.com> (https://github.com/EdMSL)",
+  "publisher": "EdMSL",
+  "license": "MIT",
+  "icon": "images/logo.png",
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "lint": "eslint",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "22.9.0",
+    "@types/vscode": "1.55.0",
+    "node-html-parser": "6.1.13",
+    "typescript": "^5.6.2"
+  },
+  "contributes": {
+    "breakpoints": [
+      {
+        "language": "obscript"
+      }
     ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/temetra/tes4_vscode_syntax.git"
-    },
-    "keywords": [
-        "syntax",
-        "highlight",
-        "tes4",
-        "oblivion"
+    "languages": [
+      {
+        "id": "obscript",
+        "aliases": [
+          "Oblivion Script",
+          "TES4 Script",
+          "obscript"
+        ],
+        "extensions": [
+          ".obscript"
+        ],
+        "configuration": "./language-configuration.json"
+      }
     ],
-    "author": "Temetra <temetra.xy+git@gmail.com>",
-    "publisher": "Temetra",
-    "license": "MIT",
-    "icon": "images/logo.png",
-    "activationEvents": [
-		"*"
-	],
-    "main": "./out/extension.js",
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"lint": "eslint",
-		"watch": "tsc -watch -p ./"
-	},
-    "contributes": {
-        "languages": [
-            {
-                "id": "obscript",
-                "aliases": [
-                    "Oblivion Script",
-                    "TES4 Script",
-                    "obscript"
-                ],
-                "extensions": [
-                    ".obscript"
-                ],
-                "configuration": "./language-configuration.json"
-            }
-        ],
-        "grammars": [
-            {
-                "language": "obscript",
-                "scopeName": "source.obscript",
-                "path": "./syntaxes/obscript.tmLanguage.json"
-            }
-        ],
-        "snippets": [
-            {
-                "language": "obscript",
-                "path": "./snippets/obscript.json"
-            }
-        ]
-    }
+    "grammars": [
+      {
+        "language": "obscript",
+        "scopeName": "source.obscript",
+        "path": "./syntaxes/obscript.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "obscript",
+        "path": "./snippets/obscript.json"
+      }
+    ]
+  }
 }
