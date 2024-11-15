@@ -1,11 +1,12 @@
-# The Elder Scrolls IV: Oblivion Script Syntax
+# Obscript Language Tools
 
-This extension provides a TextMate grammar for the scripting language used in The Elder Scrolls IV: Oblivion (Obscript).
+This extension is an extended version of [Temetra's](https://github.com/Temetra) [The Elder Scrolls IV: Oblivion Script Syntax](https://github.com/Temetra/tes4_vscode_syntax) extension. It provides various features for the scripting language used in The Elder Scrolls IV: Oblivion (Obscript).
 
 ![](https://raw.githubusercontent.com/Temetra/tes4_vscode_syntax/main/images/example.png)
 
 ## Features
 
+### Code highlighting
 This extension highlights the following:
 
 * Variable types
@@ -20,6 +21,4 @@ It also highlights 364 Construction Set functions, and 1467 OBSE functions. Thes
 
 Works well with the "Sync Scripts to Disk" feature in [Construction Set Extender](https://www.nexusmods.com/oblivion/mods/36370).
 
-## Known Issues
-
-None currently. Please let me know of any issues on [Github](https://github.com/temetra/tes4_vscode_syntax).
+### Code autocomplition

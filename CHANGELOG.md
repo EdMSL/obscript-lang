@@ -1,5 +1,4 @@
 # Change Log
 
-## v1.0.0
-
-- Initial release
+### 1.0.0 (15.11.2024)
+  Initial release
