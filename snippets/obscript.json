@@ -1,20 +1,27 @@
 {
-  "test": {
-  "prefix": "begin",
-  "body": [
-    "begin",
-    "\t$0",
-    "end;"
-  ],
-  "description": "Begin end"
+  "let": {
+    "prefix": "let",
+    "body": [
+      "let $1 := $0"
+    ],
+    "description": "Define a variable (OBSE)"
   },
-  "case end": {
-  "prefix": "case",
-  "body": [
-    "case $1 of",
-    "\t$0",
-    "end;"
-  ],
-  "description": "case end"
+  "set": {
+    "prefix": "set",
+    "body": [
+      "set $1 to $0"
+    ],
+    "description": "Define a variable (Vanilla)"
+  },
+  "function": {
+    "prefix": "func",
+    "body": [
+      "Scn ${TM_FILENAME:NewScript}\n",
+      "${2|ref,short,float,array_var,string_var|} ${1}\n",
+      "Begin Function { ${1:varName} }\n",
+      "$0\n",
+      "End"
+    ],
+    "description": "Create a function script"
   }
 }
