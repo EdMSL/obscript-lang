@@ -1,6 +1,62 @@
 import * as vscode from 'vscode';
 import { getFuncs } from './parser';
 
+const docBaseUri = 'https://cs.uesp.net/wiki';
+enum MenuType {
+	Message = 1001,
+	Inventory = 1002,
+	Stats = 1003,
+	HUDMain = 1004,
+	HUDInfo = 1005,
+	HUDReticle = 1006,
+	Loading = 1007,
+	Barter = 1008,
+	Container = 1008,
+	Dialog = 1009,
+	HUDSubtitle = 1010,
+	Generic = 1011,
+	SleepWait = 1012,
+	Pause = 1013,
+	LockPick = 1014,
+	Options = 1015,
+	Quantity = 1016,
+	Audio = 1017,
+	Video = 1018,
+	VideoDisplay = 1019,
+	Gameplay = 1020,
+	Controls = 1021,
+	Magic = 1022,
+	Map = 1023,
+	MagicPopup = 1024,
+	Negotiate = 1025,
+	Book = 1026,
+	LevelUp = 1027,
+	Training = 1028,
+	BirthSign = 1029,
+	Class = 1030,
+	Attributes = 1031,
+	Skills = 1032,
+	Specialization = 1033,
+	Persuasion = 1034,
+	Repair = 1035,
+	IngredientSelection = 1035,
+	RaceSex = 1036,
+	SpellPurchase = 1037,
+	Load = 1038,
+	Save = 1039,
+	Alchemy = 1040,
+	SpellMaking = 1041,
+	Enchantment = 1042,
+	EffectSetting = 1043,
+	Main = 1044,
+	Breath = 1045,
+	QuickKeys = 1046,
+	Credits = 1047,
+	SigilStone = 1048,
+	Recharge = 1049,
+	TextEdit = 1051,
+}
+
 const createCompletion = () => {
 	const provider1 = vscode.languages.registerCompletionItemProvider(
 		'obscript',
@@ -10,13 +66,22 @@ const createCompletion = () => {
 
 				let arr: vscode.CompletionItem[] = [];
 				
-				if (funcs) {
+				if (funcs.elements.length) {
+					for (let index = 0; index < funcs.elements.length; index++) {
+						const node = funcs.elements[index];
 		
-					for (let index = 0; index < funcs.length; index++) {
-						const node: any = funcs[index];
-		
-						if (node.firstChild?.text) {
-							arr.push(new vscode.CompletionItem(node.firstChild.text));
+						if (node.firstChild?.textContent) {
+							const newCompletionItem = new vscode.CompletionItem(node.firstChild.textContent);
+							const docs = new vscode.MarkdownString(`Source: ${funcs.source}\nDescription. More info [here](${docBaseUri}/${node.firstChild.textContent}).`);
+
+							newCompletionItem.kind = vscode.CompletionItemKind.Function;
+							newCompletionItem.documentation = docs;
+							
+							// if (node.firstChild.textContent = "GetActiveMenuSelection") {
+							// 	newCompletionItem.documentation = "Returns the item in the active menu over which the mouse is currently positioned. The return type varies depending on the active menu";								
+							// }
+
+							arr.push(newCompletionItem);
 						}
 					}
 				}

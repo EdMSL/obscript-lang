@@ -1,6 +1,12 @@
 import { parse } from 'node-html-parser';
 import { get } from 'https';
 
+
+interface ScriptFuncs {
+	source: "vanilla"|'OBSE',
+	elements: ReturnType<typeof parse>[],
+}
+
 const doc = `
   <?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -7794,14 +7800,14 @@ SetHair<sup>13</sup></a><br />
 <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a></p></body>
   `
 
-const parseDoc = () => {
-  var root = parse(doc);
-  var funcs = root.querySelectorAll('p:has(a.f)');
+const parseDoc = (): ScriptFuncs => {
+  const root = parse(doc);
+  const funcs = root.querySelectorAll('p:has(a.f)');
 
-  return funcs;
+  return { source: 'OBSE', elements: funcs };
 }
 
-export function getFuncs() {
+export function getFuncs(): ScriptFuncs {
   return parseDoc();
 }
 
