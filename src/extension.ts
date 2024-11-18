@@ -3,6 +3,9 @@ import { getFuncs } from './parser';
 
 const docBaseUri = 'https://cs.uesp.net/wiki';
 enum MenuType {
+	MainFour = 1,
+	Other = 2,
+	Console = 3,
 	Message = 1001,
 	Inventory = 1002,
 	Stats = 1003,
@@ -126,7 +129,29 @@ const createCompletion = () => {
 		'.'
 	);
 
-	return [provider1, provider2];
+	const provider3 = vscode.languages.registerCompletionItemProvider(
+		'obscript',
+		{
+			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+				const linePrefix = document.lineAt(position).text.slice(0, position.character);
+				if (!linePrefix.endsWith('Begin MenuMode ')) {
+					return undefined;
+				}
+
+				const menuTypes = Object.values(MenuType);
+
+				return menuTypes.slice(0, menuTypes.length / 2).map((elem) => {
+					const item = new vscode.CompletionItem(elem as string, vscode.CompletionItemKind.Constant);
+					item.insertText = MenuType[elem as keyof typeof MenuType].toString();
+
+					return item;
+				});				
+			}
+		},
+		'.'
+	);
+
+	return [provider1, provider2, provider3];
 }
 
 export function activate(context: vscode.ExtensionContext) {

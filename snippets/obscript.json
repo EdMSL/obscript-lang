@@ -23,5 +23,14 @@
       "End"
     ],
     "description": "Create a function script"
+  },
+  "blocktype": {
+    "prefix": "begin",
+    "body": [
+      "Begin ${1|GameMode,MenuMode,OnActivate,OnActorEquip,OnActorUnequip,OnAdd,OnAlarm,OnAlarmVictim,OnDeath,OnDrop,OnEquip,OnHit,OnHitWith,OnKnockout,OnLoad,OnMagicEffectHit,OnMurder,OnPackageChange,OnPackageDone,OnPackageStart,OnReset,OnSell,OnStartCombat,OnTrigger,OnTriggerActor,OnTriggerMob,OnUnequip,ScriptEffectFinish,ScriptEffectStart,ScriptEffectUpdate|} $2\n",
+      "$0\n",
+      "End"
+    ],
+    "description": "Define a variable (Vanilla)"
   }
 }
