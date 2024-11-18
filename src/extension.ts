@@ -72,14 +72,10 @@ const createCompletion = () => {
 		
 						if (node.firstChild?.textContent) {
 							const newCompletionItem = new vscode.CompletionItem(node.firstChild.textContent);
-							const docs = new vscode.MarkdownString(`Source: ${funcs.source}\nDescription. More info [here](${docBaseUri}/${node.firstChild.textContent}).`);
+							const docs = new vscode.MarkdownString(`Source: ${funcs.source}\n${node.childNodes[1].textContent}. More info [here](${docBaseUri}/${node.firstChild.textContent}).`);
 
 							newCompletionItem.kind = vscode.CompletionItemKind.Function;
 							newCompletionItem.documentation = docs;
-							
-							// if (node.firstChild.textContent = "GetActiveMenuSelection") {
-							// 	newCompletionItem.documentation = "Returns the item in the active menu over which the mouse is currently positioned. The return type varies depending on the active menu";								
-							// }
 
 							arr.push(newCompletionItem);
 						}
