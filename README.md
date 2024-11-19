@@ -21,4 +21,4 @@ It also highlights 364 Construction Set functions, and 1467 OBSE functions. Thes
 
 Works well with the "Sync Scripts to Disk" feature in [Construction Set Extender](https://www.nexusmods.com/oblivion/mods/36370).
 
-### Code autocomplition
+### Code autocomplition 
