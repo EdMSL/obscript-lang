@@ -71,5 +71,8 @@
         "path": "./snippets/obscript.json"
       }
     ]
+  },
+  "capabilities": {
+    "hoverProvider": "true"
   }
 }

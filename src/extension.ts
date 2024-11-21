@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
-import { getFuncs } from './parser';
+
+import obscriptHover from './hover/obscript.json';
+import functions from './data/functions.json';
 
 const docBaseUri = 'https://cs.uesp.net/wiki';
 enum MenuType {
@@ -59,36 +61,61 @@ enum MenuType {
 	Recharge = 1049,
 	TextEdit = 1051,
 }
+const variableTypes = ['short', 'long', 'int', 'ref', 'string_var', 'array_var'];
+
+interface HoverItem {
+	body: string[],
+	description: string,
+	hover?: string,
+	prefix?: string,
+}
+
+interface Hover {
+	[key: string]: HoverItem,
+};
+
+function createHover(snippet: any) {
+	const example = typeof snippet.example == 'undefined' ? '' : snippet.example
+	const description = typeof snippet.description == 'undefined' ? '' : snippet.description
+
+	return new vscode.Hover({
+		language: 'obscript',
+		value: description + '\n\n' + example
+	});
+}
 
 const createCompletion = () => {
 	const provider1 = vscode.languages.registerCompletionItemProvider(
 		'obscript',
 		{
 			provideCompletionItems(_document: vscode.TextDocument, _position: vscode.Position, _token: vscode.CancellationToken, _context: vscode.CompletionContext) {
-				const funcs = getFuncs();
-
-				let arr: vscode.CompletionItem[] = [];
+				// const funcs = getFuncs();
+				const functionItems: vscode.CompletionItem[] = [];
 				
-				if (funcs.elements.length) {
-					for (let index = 0; index < funcs.elements.length; index++) {
-						const node = funcs.elements[index];
+				if (functions.elements.length) {
+					for (let index = 0; index < functions.elements.length; index++) {
+						const node = functions.elements[index];
 		
-						if (node.firstChild?.textContent) {
-							const newCompletionItem = new vscode.CompletionItem(node.firstChild.textContent);
-							const docs = new vscode.MarkdownString(`Source: ${funcs.source}\n${node.childNodes[1].textContent}. More info [here](${docBaseUri}/${node.firstChild.textContent}).`);
+						if (node.name) {
+							const newCompletionItem = new vscode.CompletionItem(node.name);
+							const docs = new vscode.MarkdownString(`${node.description}. More info [here](${docBaseUri}/${node.name}).`);
 
 							newCompletionItem.kind = vscode.CompletionItemKind.Function;
 							newCompletionItem.documentation = docs;
+							newCompletionItem.detail = functions.source;
 
-							arr.push(newCompletionItem);
+							functionItems.push(newCompletionItem);
 						}
 					}
 				}
+
+				const variableTypeItems = variableTypes.map((variable) => new vscode.CompletionItem(variable, vscode.CompletionItemKind.Variable));
 
 				const snippetCompletion = new vscode.CompletionItem('Good part of the day');
 				snippetCompletion.insertText = new vscode.SnippetString('Good ${1|morning,afternoon,evening|}. It is ${1}, right?');
 				const docs = new vscode.MarkdownString("Inserts a snippet that lets you select [link](x.ts).");
 				snippetCompletion.documentation = docs;
+				snippetCompletion.detail = 'details';
 				// docs.baseUri = vscode.Uri.parse('http://example.com/a/b/c/');
 
 				const commitCharacterCompletion = new vscode.CompletionItem('console');
@@ -104,7 +131,8 @@ const createCompletion = () => {
 					snippetCompletion,
 					commitCharacterCompletion,
 					commandCompletion,
-					...arr,
+					...functionItems,
+					...variableTypeItems,
 				];
 			}
 		}
@@ -154,7 +182,24 @@ const createCompletion = () => {
 	return [provider1, provider2, provider3];
 }
 
+const hoverProvider = vscode.languages.registerHoverProvider('obscript', {
+  provideHover(document, position) {
+		const range = document.getWordRangeAtPosition(position);
+		const word = document.getText(range);
+
+		const hovers: Hover = obscriptHover;
+
+		for (const snippet in hovers) {
+			if (hovers[snippet].prefix == word || hovers[snippet].hover == word) {
+				return createHover(hovers[snippet])
+			}
+		}
+	}
+});
+
 export function activate(context: vscode.ExtensionContext) {
 	const providers = createCompletion();
+
 	context.subscriptions.push(...providers);
+	context.subscriptions.push(hoverProvider);
 }
