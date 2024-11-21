@@ -1,11 +1,7 @@
 import { parse } from 'node-html-parser';
+import fs from 'fs';
 import { get } from 'https';
 
-
-interface ScriptFuncs {
-	source: "vanilla"|'OBSE',
-	elements: ReturnType<typeof parse>[],
-}
 
 const doc = `
   <?xml version="1.0" encoding="utf-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
@@ -7800,15 +7796,21 @@ SetHair<sup>13</sup></a><br />
 <p><a href="http://validator.w3.org/check?uri=referer"><img src="http://www.w3.org/Icons/valid-xhtml10" alt="Valid XHTML 1.0 Strict" height="31" width="88" /></a></p></body>
   `
 
-const parseDoc = (): ScriptFuncs => {
+const parseDoc = () => {
   const root = parse(doc);
   const funcs = root.querySelectorAll('p:has(a.f)');
 
-  return { source: 'OBSE', elements: funcs };
+	const data = {
+		source: "OBSE",
+		elements: funcs.map((func) => {
+			return {
+				name: func.firstChild?.textContent,
+				description: func.childNodes[1].textContent,
+			}
+		})
+	}
+
+	fs.writeFileSync("./src/data/functions.json", JSON.stringify(data, null, 2), { encoding: 'utf-8'});
 }
 
-export function getFuncs(): ScriptFuncs {
-  return parseDoc();
-}
-
-// getFuncs();
+parseDoc();
