@@ -7797,20 +7797,29 @@ SetHair<sup>13</sup></a><br />
   `
 
 const parseDoc = () => {
-  const root = parse(doc);
-  const funcs = root.querySelectorAll('p:has(a.f)');
+	const root = parse(doc);
+	const funcs = root.querySelectorAll('p:has(a.f)');
+
+	//@ts-ignore
+	const totalFunctions = funcs.reduce((total, current) => {
+		return [
+			...total,
+			{
+				name: current.firstChild ? current.firstChild?.textContent : '',
+				description: current.childNodes[1].textContent,
+				example: current.querySelectorAll('code').map((item) => item.rawText)
+			}
+		];
+	}, []);
 
 	const data = {
 		source: "OBSE",
-		elements: funcs.map((func) => {
-			return {
-				name: func.firstChild?.textContent,
-				description: func.childNodes[1].textContent,
-			}
-		})
+		elements: totalFunctions,
 	}
 
-	fs.writeFileSync("./src/data/functions.json", JSON.stringify(data, null, 2), { encoding: 'utf-8'});
+	console.log(funcs[5]);
+
+	fs.writeFileSync("./data/functions.json", JSON.stringify(data, null, 2), { encoding: 'utf-8' });
 }
 
 parseDoc();

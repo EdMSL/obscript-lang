@@ -1,43 +1,22 @@
 {
   "if": {
-    "prefix": "if",
-    "body": [
-      "{% if ${condition} %}",
-      "\t$1",
-      "{% endif %}"
-    ],
+    "name": "if",
     "description": "The if statement in Twig is comparable with the if statements of PHP"
   },
   "if else": {
-    "prefix": "if else",
-    "body": [
-      "{% if ${condition} %}",
-      "\t$1",
-      "{% else %}",
-      "\t$2",
-      "{% endif %}"
-    ],
+    "name": "if else",
     "description": "The if statement in Twig is comparable with the if statements of PHP"
   },
   "else": {
-    "prefix": "else",
-    "body": [
-      "{% else %}"
-    ],
+    "name": "else",
     "description": "The if statement in Twig is comparable with the if statements of PHP"
   },
   "else if": {
-    "prefix": "else if",
-    "body": [
-      "{% elseif ${condition} %}"
-    ],
+    "name": "else if",
     "description": "The if statement in Twig is comparable with the if statements of PHP"
   },
   "set": {
-    "prefix": "set",
-    "body": [
-      "{% set ${name} = ${value} %}$1"
-    ],
+    "name": "set",
     "description": "Assign values to variables"
   }
 }

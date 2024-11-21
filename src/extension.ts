@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 
-import obscriptHover from './hover/obscript.json';
-import functions from './data/functions.json';
+import mainHover from '../data/main.json';
+import functions from '../data/functions.json';
 
 const docBaseUri = 'https://cs.uesp.net/wiki';
 enum MenuType {
@@ -61,26 +61,25 @@ enum MenuType {
 	Recharge = 1049,
 	TextEdit = 1051,
 }
-const variableTypes = ['short', 'long', 'int', 'ref', 'string_var', 'array_var'];
+const variableTypes = ['short', 'float', 'int', 'ref', 'string_var', 'array_var'];
 
 interface HoverItem {
-	body: string[],
+	name: string,
 	description: string,
-	hover?: string,
-	prefix?: string,
+	example?: string[],
 }
 
 interface Hover {
 	[key: string]: HoverItem,
 };
 
-function createHover(snippet: any) {
+function createHover(snippet: HoverItem) {
 	const example = typeof snippet.example == 'undefined' ? '' : snippet.example
 	const description = typeof snippet.description == 'undefined' ? '' : snippet.description
 
 	return new vscode.Hover({
 		language: 'obscript',
-		value: description + '\n\n' + example
+		value: description + '\n\n' + example[0],
 	});
 }
 
@@ -89,7 +88,6 @@ const createCompletion = () => {
 		'obscript',
 		{
 			provideCompletionItems(_document: vscode.TextDocument, _position: vscode.Position, _token: vscode.CancellationToken, _context: vscode.CompletionContext) {
-				// const funcs = getFuncs();
 				const functionItems: vscode.CompletionItem[] = [];
 				
 				if (functions.elements.length) {
@@ -116,7 +114,6 @@ const createCompletion = () => {
 				const docs = new vscode.MarkdownString("Inserts a snippet that lets you select [link](x.ts).");
 				snippetCompletion.documentation = docs;
 				snippetCompletion.detail = 'details';
-				// docs.baseUri = vscode.Uri.parse('http://example.com/a/b/c/');
 
 				const commitCharacterCompletion = new vscode.CompletionItem('console');
 				commitCharacterCompletion.commitCharacters = ['.'];
@@ -187,11 +184,17 @@ const hoverProvider = vscode.languages.registerHoverProvider('obscript', {
 		const range = document.getWordRangeAtPosition(position);
 		const word = document.getText(range);
 
-		const hovers: Hover = obscriptHover;
+		const hovers: Hover = mainHover;
 
 		for (const snippet in hovers) {
-			if (hovers[snippet].prefix == word || hovers[snippet].hover == word) {
+			if (hovers[snippet].name == word) {
 				return createHover(hovers[snippet])
+			}
+		}
+
+		for (const item in functions.elements) {
+			if (functions.elements[item].name == word) {
+				return createHover(functions.elements[item]);
 			}
 		}
 	}
