@@ -63,24 +63,38 @@ enum MenuType {
 }
 const variableTypes = ['short', 'float', 'int', 'ref', 'string_var', 'array_var'];
 
-interface HoverItem {
-	name: string,
-	description: string,
-	example?: string[],
+interface IExample {
+	raw: string,
+	return: string,
+	param: string,
 }
 
-interface Hover {
-	[key: string]: HoverItem,
+interface IHoverItem {
+	name: string,
+	description: string,
+	example?: string|IExample,
+}
+
+interface IHover {
+	[key: string]: IHoverItem,
 };
 
-function createHover(snippet: HoverItem) {
-	const example = typeof snippet.example == 'undefined' ? '' : snippet.example
-	const description = typeof snippet.description == 'undefined' ? '' : snippet.description
+function createHover(snippet: IHoverItem) {
+	const example = typeof snippet.example == 'undefined' ? '' : snippet.example;
+	const descriptionText = typeof snippet.description == 'undefined' ? '' : snippet.description;
 
-	return new vscode.Hover({
-		language: 'obscript',
-		value: description + '\n\n' + example[0],
-	});
+	const hoverText = new vscode.MarkdownString(descriptionText);
+
+	if (example) {
+		if (typeof example === 'string') {
+			hoverText.appendText(example)
+		} else {
+			hoverText.appendMarkdown(`\n\n${example.param ? `@param ${example.param}\n\n` : ''}${example.return ? `return: ${example.return}` : '' }`);
+		}
+
+	}
+
+	return new vscode.Hover(hoverText);
 }
 
 const createCompletion = () => {
@@ -184,7 +198,7 @@ const hoverProvider = vscode.languages.registerHoverProvider('obscript', {
 		const range = document.getWordRangeAtPosition(position);
 		const word = document.getText(range);
 
-		const hovers: Hover = mainHover;
+		const hovers: IHover = mainHover;
 
 		for (const snippet in hovers) {
 			if (hovers[snippet].name == word) {

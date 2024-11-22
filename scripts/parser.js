@@ -7802,14 +7802,54 @@ const parseDoc = () => {
 
 	//@ts-ignore
 	const totalFunctions = funcs.reduce((total, current) => {
-		return [
-			...total,
-			{
-				name: current.firstChild ? current.firstChild?.textContent : '',
-				description: current.childNodes[1].textContent,
-				example: current.querySelectorAll('code').map((item) => item.rawText)
-			}
-		];
+		const example = current.querySelector('code')?.rawText.split(' ').reduce((obj, node, index) => {
+				if (index == 0 && /(.+)/.test(node)) {
+					const str = node.substring(1, node.length - 1);
+
+					return {
+						...obj,
+						return: str.includes(':') ? str.split(':')[1] : '',
+					}
+				} else if (index == 1 && node.includes('.')) {
+					return {
+						...obj,
+						param: node,
+					}
+				}
+				return {...obj}
+			}, {raw: current.rawText, return: '', param: ''});
+	
+			return [
+				...total,
+				{
+					name: current.firstChild ? current.firstChild?.textContent : '',
+					description: current.childNodes[1].textContent.replace(/^\s*-\s*/,''),
+					example,
+				}
+			];
+		// const example = current.querySelector('code')?.childNodes.reduce((obj, node, index) => {
+		// 	if (index == 0) {
+		// 		return {
+		// 			...obj,
+		// 			return: node.textContent,
+		// 		}
+		// 	} else if (index == 1) {
+		// 		return {
+		// 			...obj,
+		// 			param: node.textContent,
+		// 		}
+		// 	}
+		// 	return {...obj}
+		// }, {raw: current.rawText, return: '', param: ''});
+
+		// return [
+		// 	...total,
+		// 	{
+		// 		name: current.firstChild ? current.firstChild?.textContent : '',
+		// 		description: current.childNodes[1].textContent.replace(/^\s*-\s*/,''),
+		// 		example,
+		// 	}
+		// ];
 	}, []);
 
 	const data = {
