@@ -7802,22 +7802,28 @@ const parseDoc = () => {
 
 	//@ts-ignore
 	const totalFunctions = funcs.reduce((total, current) => {
+		//@ts-ignore
 		const example = current.querySelector('code')?.rawText.split(' ').reduce((obj, node, index) => {
 				if (index == 0 && /(.+)/.test(node)) {
 					const str = node.substring(1, node.length - 1);
+					const strArr = str.includes(':') ? str.split(':') : [str];
 
 					return {
 						...obj,
-						return: str.includes(':') ? str.split(':')[1] : '',
+						return: strArr,
 					}
-				} else if (index == 1 && node.includes('.')) {
+				} else if ((index == 0 && !/(.+)/.test(node)) || (index >= 1 && node.includes('.'))) {
 					return {
 						...obj,
-						param: node,
+						params: [
+							...obj.params,
+							node,
+						],
 					}
 				}
+
 				return {...obj}
-			}, {raw: current.rawText, return: '', param: ''});
+			}, {raw: current.rawText, return: '', params: []});
 	
 			return [
 				...total,
@@ -7856,8 +7862,6 @@ const parseDoc = () => {
 		source: "OBSE",
 		elements: totalFunctions,
 	}
-
-	console.log(funcs[5]);
 
 	fs.writeFileSync("./data/functions.json", JSON.stringify(data, null, 2), { encoding: 'utf-8' });
 }
