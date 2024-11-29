@@ -65,8 +65,8 @@ const variableTypes = ['short', 'float', 'int', 'ref', 'string_var', 'array_var'
 
 interface IExample {
 	raw: string,
-	return: string,
-	param: string,
+	return: string[]|string,
+	params: string[],
 }
 
 interface IHoverItem {
@@ -83,13 +83,17 @@ function createHover(snippet: IHoverItem) {
 	const example = typeof snippet.example == 'undefined' ? '' : snippet.example;
 	const descriptionText = typeof snippet.description == 'undefined' ? '' : snippet.description;
 
-	const hoverText = new vscode.MarkdownString(descriptionText);
-
+	const hoverText = new vscode.MarkdownString(`**OBSE**\n${descriptionText}`).appendMarkdown(`\n\n\`\`\`obscript\n`);
 	if (example) {
 		if (typeof example === 'string') {
-			hoverText.appendText(example)
+			hoverText.appendText(`${example}\n\`\`\`\n`)
 		} else {
-			hoverText.appendMarkdown(`\n\n${example.param ? `@param ${example.param}\n\n` : ''}${example.return ? `return: ${example.return}` : '' }`);
+			hoverText.appendText(`\n\`\`\`\n`)
+
+			example.params.forEach((curr) => {
+				hoverText.appendMarkdown(`@param ${curr}\n\n`);
+			})
+			hoverText.appendMarkdown(`${example.return.length == 2 ? `@return \`${example.return[1]}:${example.return[0]}\`` : '' }`);
 		}
 
 	}
@@ -154,6 +158,7 @@ const createCompletion = () => {
 		{
 			provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
 				const linePrefix = document.lineAt(position).text.slice(0, position.character);
+
 				if (!linePrefix.endsWith('console.')) {
 					return undefined;
 				}
@@ -197,7 +202,6 @@ const hoverProvider = vscode.languages.registerHoverProvider('obscript', {
   provideHover(document, position) {
 		const range = document.getWordRangeAtPosition(position);
 		const word = document.getText(range);
-
 		const hovers: IHover = mainHover;
 
 		for (const snippet in hovers) {
